@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: financeira-db
+    environment:
+      POSTGRES_DB: financeira
+      POSTGRES_USER: finance_user
+      POSTGRES_PASSWORD: finance_pass_dev
+      PGTZ: UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - financeira-network
+
+  # Ollama LLM Service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: financeira-ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - financeira-network
+    # Puxar modelo na inicialização (descomente se quiser automático)
+    # command: ollama run llama2
+
+  # API Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: financeira-api
+    environment:
+      # Spring Boot
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_APPLICATION_NAME: api-financeira-saas
+
+      # Database
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/financeira
+      SPRING_DATASOURCE_USERNAME: finance_user
+      SPRING_DATASOURCE_PASSWORD: finance_pass_dev
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: UTC
+
+      # Spring AI - Ollama Configuration
+      SPRING_AI_OLLAMA_BASE_URL: http://ollama:11434
+      SPRING_AI_OLLAMA_MODEL: llama2
+      # Placeholder para evitar falha de auto-config quando não houver chave real
+      SPRING_AI_OPENAI_API_KEY: sk-local-dev-placeholder
+
+      # Security
+      SECURITY_JWT_SECRET: ${JWT_SECRET:-change-me-to-a-secure-secret-key-with-32-chars-min}
+
+      # Java Options
+      JAVA_OPTS: "-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:+HeapDumpOnOutOfMemoryError"
+
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - ollama
+    networks:
+      - financeira-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  ollama_data:
+    driver: local
+
+networks:
+  financeira-network:
+    driver: bridge

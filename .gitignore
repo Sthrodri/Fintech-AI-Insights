@@ -1,0 +1,183 @@
+# ======================================
+# IDE e Editor
+# ======================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# ======================================
+# Build e Compilação
+# ======================================
+target/
+build/
+*.class
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# ======================================
+# Dependências Maven
+# ======================================
+.m2/
+dependency-reduced-pom.xml
+
+# ======================================
+# Variáveis de Ambiente e Segurança
+# ======================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# ======================================
+# Banco de Dados (Desenvolvimento)
+# ======================================
+*.db
+*.sqlite
+*.sqlite3
+h2.db
+
+# ======================================
+# Logs
+# ======================================
+logs/
+*.log
+
+# ======================================
+# Node (se usar para frontend)
+# ======================================
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ======================================
+# OS Temporários
+# ======================================
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# ======================================
+# Spring Boot
+# ======================================
+application-local.properties
+application-local.yml
+
+
+# Docker
+.env.docker
+.docker/
+data/
+pgdata/
+ollama_data/
+
+# Spring AI / Vector DB
+vector_store/
+models/
+.ollama/
+
+# Maven Wrapper
+.mvn/wrapper/
+mvnw
+mvnw.cmd
+
+# ======================================
+# IDE e Editor
+# ======================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# ======================================
+# Build e Compilação
+# ======================================
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# ======================================
+# Dependências Maven
+# ======================================
+.m2/
+dependency-reduced-pom.xml
+
+# ======================================
+# Variáveis de Ambiente e Segurança
+# ======================================
+.env
+.env.local
+.env.*.local
+.env.docker
+*.key
+*.pem
+application-local.properties
+application-local.yml
+application-dev.properties
+application-dev.yml
+
+# ======================================
+# Banco de Dados e Docker
+# ======================================
+*.db
+*.sqlite
+*.sqlite3
+h2.db
+.docker/
+data/
+pgdata/
+postgres_data/
+mysql_data/
+ollama_data/
+.ollama/
+
+# ======================================
+# Logs
+# ======================================
+logs/
+*.log
+
+# ======================================
+# Spring AI / Vector DB / IA
+# ======================================
+vector_store/
+models/
+.python_history
+__pycache__/
+
+# ======================================
+# Maven Wrapper
+# ======================================
+.mvn/wrapper/
+mvnw
+mvnw.cmd
+
+# ======================================
+# Node (Frontend)
+# ======================================
+node_modules/
+npm-debug.log
+yarn-error.log
+.next/
+dist/
+
+# ======================================
+# OS Temporários
+# ======================================
+Thumbs.db
+.AppleDouble
+.LSOverride

@@ -1,0 +1,84 @@
+spring:
+  application:
+    name: api-financeira-saas
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  ai:
+    # Configuração OpenAI opcional (não deve bloquear startup sem chave)
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4o-mini}
+          temperature: ${OPENAI_TEMPERATURE:0.4}
+          proxy:
+            type: ${SPRING_AI_OPENAI_CHAT_OPTIONS_PROXY_TYPE:none}
+    # Configuração Ollama (alternativa gratuita, use quando disponível)
+    # Descomente as linhas abaixo se quiser usar Ollama em vez de OpenAI
+    # No Docker, o SPRING_AI_OLLAMA_BASE_URL será http://ollama:11434
+    ollama:
+      base-url: ${SPRING_AI_OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        model: ${SPRING_AI_OLLAMA_MODEL:llama2}
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET:change-me-to-a-secure-secret-key-with-32-chars-minimum}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:financeira;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:postgresql://db:5432/financeira}}
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:finance_user}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:finance_pass}}
+    hikari:
+      maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:10}
+      minimum-idle: ${SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE:5}
+      connection-timeout: ${SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT:20000}
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:validate}
+    properties:
+      hibernate:
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+        format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL:true}
+        jdbc:
+          time_zone: ${SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE:UTC}
+  ai:
+    ollama:
+      base-url: ${SPRING_AI_OLLAMA_BASE_URL:http://ollama:11434}
+
+# Configurações de logging para produção
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.projeto: ${LOGGING_LEVEL_COM_PROJETO:INFO}
+    org.springframework.security: ${LOGGING_LEVEL_SPRING_SECURITY:WARN}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
