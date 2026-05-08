@@ -17,6 +17,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
+            RateLimitFilter rateLimitFilter,
             JwtAuthenticationFilter jwtAuthenticationFilter,
             TenantHibernateFilter tenantHibernateFilter
     ) throws Exception {
@@ -28,7 +29,8 @@ public class SecurityConfig {
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(tenantHibernateFilter, JwtAuthenticationFilter.class)
+                .addFilterAfter(rateLimitFilter, JwtAuthenticationFilter.class)
+                .addFilterAfter(tenantHibernateFilter, RateLimitFilter.class)
                 .build();
     }
 
