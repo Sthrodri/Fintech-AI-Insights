@@ -2,8 +2,6 @@ package com.projeto.infrastructure.security;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Bucket4j;
-import io.github.bucket4j.Refill;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,30 +36,31 @@ public class RateLimitFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String tenantId = tenantContextHolder.getTenantId();
 
-        // Se não houver tenant no contexto, deixar passar (requisições públicas)
         if (tenantId == null || tenantId.isBlank()) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        Bucket bucket = buckets.computeIfAbsent(tenantId, _ -> createNewBucket());
+        Bucket bucket = buckets.computeIfAbsent(tenantId, key -> createNewBucket());
 
         if (bucket.tryConsume(1)) {
-            log.debug("Rate limit OK for tenant: {} (remaining: {})", tenantId, bucket.estimateAbilityToConsume(1).getRoundedTokensToConsume());
+            log.debug("Rate limit OK for tenant: {} (remaining: {})", tenantId, bucket.getAvailableTokens());
             filterChain.doFilter(request, response);
         } else {
             log.warn("Rate limit exceeded for tenant: {}", tenantId);
-            response.setStatus(HttpServletResponse.SC_TOO_MANY_REQUESTS);
+            response.setStatus(429);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(String.format(RATE_LIMIT_EXCEEDED_JSON, tenantId));
         }
     }
 
     private Bucket createNewBucket() {
-        Bandwidth limit = Bandwidth.classic(REQUESTS_PER_MINUTE, Refill.intervally(REQUESTS_PER_MINUTE, Duration.ofMinutes(1)));
-        return Bucket4j.builder()
+        Bandwidth limit = Bandwidth.builder()
+                .capacity(REQUESTS_PER_MINUTE)
+                .refillGreedy(REQUESTS_PER_MINUTE, Duration.ofMinutes(1))
+                .build();
+        return Bucket.builder()
                 .addLimit(limit)
                 .build();
     }
 }
-
