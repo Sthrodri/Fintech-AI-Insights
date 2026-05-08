@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.function.Function;
 
 @Service
@@ -20,6 +23,18 @@ public class JwtService {
 
     public JwtService(@Value("${security.jwt.secret:change-me-change-me-change-me-change-me}") String secret) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String generateToken(String username, String tenantId) {
+        Instant now = Instant.now();
+        Instant expiration = now.plus(1, ChronoUnit.HOURS);
+        return Jwts.builder()
+                .subject(username)
+                .claim(TENANT_ID_CLAIM, tenantId)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiration))
+                .signWith(secretKey)
+                .compact();
     }
 
     public String extractUsername(String token) {
