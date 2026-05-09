@@ -27,7 +27,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        try {
             String token = resolveToken(request);
             if (token != null && jwtService.isTokenValid(token)) {
                 String tenantId = jwtService.extractTenantId(token);
@@ -44,11 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        } finally {
-            SecurityContextHolder.clearContext();
-            tenantContextHolder.clear();
-        }
     }
+
 
     private String resolveToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");

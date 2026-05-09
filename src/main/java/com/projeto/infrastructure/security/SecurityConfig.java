@@ -18,19 +18,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             RateLimitFilter rateLimitFilter,
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            TenantHibernateFilter tenantHibernateFilter
+            JwtAuthenticationFilter jwtAuthenticationFilter
     ) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-            .httpBasic(httpBasic -> httpBasic.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/auth/**").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/auth/**",
+                                "/h2-console/**"
+                        ).permitAll()
                         .anyRequest().authenticated())
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(rateLimitFilter, JwtAuthenticationFilter.class)
-                .addFilterAfter(tenantHibernateFilter, RateLimitFilter.class)
                 .build();
     }
 

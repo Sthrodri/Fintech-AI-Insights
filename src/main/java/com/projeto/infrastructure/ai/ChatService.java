@@ -26,34 +26,43 @@ public class ChatService implements FinancialInsightPort {
 
     @Override
     public String generateInsight(String context) {
-        if (openaiApiKey == null || openaiApiKey.isEmpty() || openaiApiKey.contains("sk-test")) {
-            return "⚠️ Aviso: A chave da API OpenAI não está configurada corretamente. " +
-                   "Configure a variável de ambiente OPENAI_API_KEY com uma chave válida. " +
-                   "Alternativamente, use Ollama descomentando a configuração em application.yml";
-        }
         String tenantId = tenantContextHolder.getTenantId();
         String safeContext = context == null || context.isBlank() ? "Sem transações recentes encontradas." : context;
         String systemPrompt = """
-                Você é um consultor financeiro estritamente analítico e direto.
-                Responda em no máximo 3 tópicos curtos.
-                Não use saudações como "Olá" ou "Espero que ajude".
-                Vá direto ao insight baseado nos dados fornecidos.
-                Formate a resposta como tópicos curtos.
-                Analise apenas os dados do tenant ativo.
+                Você é um analista financeiro backend de uma plataforma SaaS.
+                
+                Regras:
+                - Responda em português brasileiro
+                - Seja técnico e objetivo
+                - Não invente dados
+                - Não repita as transações
+                - Não explique o que recebeu
+                - Gere apenas insights financeiros
+                - Use no máximo 5 tópicos
+                - Cada tópico deve ter no máximo 2 linhas
+                - Analise somente os dados do tenant atual
+                
                 Tenant ativo: %s
-                """.formatted(tenantId == null ? "desconhecido" : tenantId);
+            """.formatted(tenantId == null ? "desconhecido" : tenantId);
         String userPrompt = """
-                Histórico recente do tenant:
+                Analise as transações abaixo e gere insights financeiros.
+                
+                Considere:
+                - padrões de gastos
+                - categorias mais caras
+                - equilíbrio entre entradas e saídas
+                - possíveis excessos
+                - observações relevantes
+                
+                Transações:
                 %s
-
-                Gere um insight financeiro em linguagem natural, com 3 a 5 observações objetivas.
-                """.formatted(safeContext);
+            """.formatted(safeContext);
 
         log.info("Prompt enviado ao Ollama:\nSYSTEM:\n{}\n\nUSER:\n{}", systemPrompt, userPrompt);
 
         return chatClient.prompt()
-            .system(systemPrompt)
-            .user(userPrompt)
+                .system(systemPrompt)
+                .user(userPrompt)
                 .call()
                 .content();
     }
