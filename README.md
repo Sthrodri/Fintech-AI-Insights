@@ -4,6 +4,8 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.5-green)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean-brightgreen)
 
+🔗 Repositório do projeto: [Fintech AI Insights](https://github.com/Sthrodri/Fintech-AI-Insights.git)
+
 ## 📋 Visão Geral
 
 Sistema SaaS multi-tenant para gestão financeira com:
