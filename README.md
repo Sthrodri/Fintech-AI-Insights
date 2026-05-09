@@ -16,6 +16,21 @@ Sistema SaaS multi-tenant para gestão financeira com:
 - ✅ Testes completos (JUnit 5 + Mockito)
 
 ---
+## 📖 Documentação Técnica
+
+A documentação completa da arquitetura, estratégias de cache, multi-tenancy, segurança, escalabilidade, resiliência e decisões técnicas está disponível em:
+
+- [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md)
+
+O documento inclui:
+- Clean Architecture e fluxo de requisição
+- Estratégias de isolamento multi-tenant
+- Rate limiting com Bucket4j
+- RAG com Spring AI + Ollama/OpenAI
+- Estratégias de cache, resiliência e circuit breakers
+- Escalabilidade horizontal e vertical
+- Diagramas de arquitetura e modelo de dados
+---
 
 ## 🚀 Início Rápido
 
