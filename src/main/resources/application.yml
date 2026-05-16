@@ -3,10 +3,12 @@ spring:
     name: api-financeira-saas
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+  server:
+    port: 8081
   ai:
     # Configuração OpenAI opcional (não deve bloquear startup sem chave)
     openai:
-      api-key: ${OPENAI_API_KEY:}
+      api-key: ${OPENAI_API_KEY:dummy-key-for-testing}
       chat:
         options:
           model: ${OPENAI_MODEL:gpt-4o-mini}
@@ -35,6 +37,8 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
+  server:
+    port: 8081
   h2:
     console:
       enabled: true

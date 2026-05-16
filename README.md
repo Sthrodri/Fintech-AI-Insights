@@ -4,6 +4,8 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.5-green)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean-brightgreen)
 
+🔗 Repositório do projeto: [Fintech AI Insights](https://github.com/Sthrodri/Fintech-AI-Insights.git)
+
 ## 📋 Visão Geral
 
 Sistema SaaS multi-tenant para gestão financeira com:
@@ -15,6 +17,21 @@ Sistema SaaS multi-tenant para gestão financeira com:
 - ✅ Java 21 com Records e Virtual Threads
 - ✅ Testes completos (JUnit 5 + Mockito)
 
+---
+## 📖 Documentação Técnica
+
+A documentação completa da arquitetura, estratégias de cache, multi-tenancy, segurança, escalabilidade, resiliência e decisões técnicas está disponível em:
+
+- [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md)
+
+O documento inclui:
+- Clean Architecture e fluxo de requisição
+- Estratégias de isolamento multi-tenant
+- Rate limiting com Bucket4j
+- RAG com Spring AI + Ollama/OpenAI
+- Estratégias de cache, resiliência e circuit breakers
+- Escalabilidade horizontal e vertical
+- Diagramas de arquitetura e modelo de dados
 ---
 
 ## 🚀 Início Rápido
