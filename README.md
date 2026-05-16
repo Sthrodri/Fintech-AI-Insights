@@ -347,10 +347,12 @@ Passos rápidos:
 
 Variáveis recomendadas para produção:
 - `SPRING_PROFILES_ACTIVE=prod`
-- `SPRING_DATASOURCE_URL`
+- `DATABASE_URL` com a External Database URL do Render, ou `SPRING_DATASOURCE_URL` já em formato JDBC
 - `SPRING_DATASOURCE_USERNAME`
 - `SPRING_DATASOURCE_PASSWORD`
 - `OPENAI_API_KEY` ou a configuração correspondente do Ollama
+
+Se você colar a URL externa do PostgreSQL do Render sem o prefixo `jdbc:`, a aplicação agora normaliza automaticamente para o formato esperado pelo Spring Boot.
 
 O Render define a porta de forma automática via `PORT`, e a aplicação já respeita esse valor.
 

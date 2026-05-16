@@ -56,7 +56,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:postgresql://db:5432/financeira}}
+    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:${DB_URL:jdbc:postgresql://db:5432/financeira}}}
     driver-class-name: org.postgresql.Driver
     username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:finance_user}}
     password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:finance_pass}}
