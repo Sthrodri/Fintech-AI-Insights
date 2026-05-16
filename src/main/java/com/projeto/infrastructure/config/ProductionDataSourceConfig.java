@@ -34,10 +34,12 @@ public class ProductionDataSourceConfig {
     private DatabaseConnection resolveConnection(Environment environment) {
         String rawUrl = firstNonBlank(
                 environment.getProperty("DATABASE_URL"),
-                environment.getProperty("SPRING_DATASOURCE_URL"),
-                environment.getProperty("DB_URL"),
-                "jdbc:postgresql://db:5432/financeira"
+                environment.getProperty("SPRING_DATASOURCE_URL")
         );
+
+        if (!StringUtils.hasText(rawUrl)) {
+            throw new IllegalStateException("DATABASE_URL ou SPRING_DATASOURCE_URL deve ser configurada no ambiente de producao");
+        }
 
         URI uri = parseUri(rawUrl);
 
@@ -57,10 +59,6 @@ public class ProductionDataSourceConfig {
     }
 
     private String normalizeJdbcUrl(String rawUrl, URI uri) {
-        if (!StringUtils.hasText(rawUrl)) {
-            return "jdbc:postgresql://db:5432/financeira";
-        }
-
         if (rawUrl.startsWith("jdbc:")) {
             return rawUrl;
         }
