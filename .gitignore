@@ -104,6 +104,8 @@ mvnw.cmd
 target/
 build/
 out/
+!src/main/java/com/projeto/application/port/out/
+!src/main/java/com/projeto/application/port/out/*.java
 *.class
 *.jar
 *.war
