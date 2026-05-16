@@ -1,10 +1,10 @@
-services:
-  - type: postgres
-    name: fintech-ai-insights-db
+databases:
+  - name: fintech-ai-insights-db
     plan: free
     databaseName: financeira
     user: finance_user
 
+services:
   - type: web
     name: fintech-ai-insights
     env: docker
