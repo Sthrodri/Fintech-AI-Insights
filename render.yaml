@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: fintech-ai-insights
+    env: docker
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod

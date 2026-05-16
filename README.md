@@ -337,6 +337,23 @@ docker build -t api-financeira-saas .
 docker run -e OPENAI_API_KEY=sk-xxx -p 8080:8080 api-financeira-saas
 ```
 
+### Render
+Este repositório inclui um blueprint em [render.yaml](./render.yaml) para deploy via Docker.
+
+Passos rápidos:
+1. No Render, escolha a opção de importar Blueprint.
+2. Aponte para este repositório e confirme o arquivo [render.yaml](./render.yaml).
+3. Configure as variáveis de ambiente no painel do serviço.
+
+Variáveis recomendadas para produção:
+- `SPRING_PROFILES_ACTIVE=prod`
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `OPENAI_API_KEY` ou a configuração correspondente do Ollama
+
+O Render define a porta de forma automática via `PORT`, e a aplicação já respeita esse valor.
+
 ### Kubernetes
 ```bash
 kubectl apply -f k8s/deployment.yaml
